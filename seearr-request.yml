@@ -1,0 +1,59 @@
+- type: custom-api
+  title: Media Requests
+  # update-interval: 5s  # Dynacat only — remove this line if using standard Glance
+  frameless: true
+  title-url: http://<YOUR_SERVER_IP>:5055/requests
+  url: http://<YOUR_SERVER_IP>:5005/requests
+  cache: 5m
+  headers:
+    Authorization: "Bearer <REQUESTS_AUTH_TOKEN>"
+  template: |
+    {{ $request_list := .JSON.Array "results" }}
+    {{ if gt (len $request_list) 0 }}
+      <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;">
+      {{ range $request_list }}
+        <li class="flex items-center gap-10 thumbnail-container thumbnail-parent">
+          <a href="http://<YOUR_SEERR_IP>:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
+            {{ $poster := .String "poster" }}
+            {{ if ne $poster "" }}
+              <img src="https://image.tmdb.org/t/p/w300{{ $poster }}" style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #222;" class="card">
+            {{ else }}
+              <div style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #333; display: flex; align-items: center; justify-content: center;" class="card">
+                <span class="color-subdue">No Poster</span>
+              </div>
+            {{ end }}
+          </a>
+          <div class="flex-1" style="padding-right: 5px;">
+            <p class="color-positive size-h4 text-truncate-2-lines margin-top-2">
+              <strong style="text-transform: capitalize;">{{ .String "title" }}</strong>
+              <span class="color-subdue">({{ or (.String "year") "UNKNOWN" }})</span>
+            </p>
+            <p class="size-h5">By: <b>{{ .String "requestedBy" }}</b></p>
+            <p class="size-h5">
+              {{ $req := .Int "requestStatus" }}
+              {{ if eq $req 1 }}      <span style="color: #ffc107;">PENDING</span>
+              {{ else if eq $req 2 }} <span style="color: #4caf50;">APPROVED</span>
+              {{ else if eq $req 3 }} <span style="color: #f44336;">DECLINED</span>
+              {{ else if eq $req 4 }} <span style="color: #f44336;">FAILED</span>
+              {{ else if eq $req 5 }} <span style="color: #4caf50;">APPROVED</span> 
+              {{ else }}              <span class="color-subdue">REQ ({{ $req }})</span>
+              {{ end }}
+              |
+              {{ $med := .Int "mediaStatus" }}
+              {{ if eq $med 1 }}      <span class="color-subdue">UNKNOWN</span>
+              {{ else if eq $med 2 }} <span style="color: #2196f3;">PENDING</span>
+              {{ else if eq $med 3 }} <span style="color: #ffc107;">PROCESSING</span>
+              {{ else if eq $med 4 }} <span style="color: #00bcd4;">PARTIAL</span>
+              {{ else if eq $med 5 }} <span style="color: #4caf50;">AVAILABLE</span>
+              {{ else if eq $med 6 }} <span style="color: #f44336;">BLACKLISTED</span>
+              {{ else if eq $med 7 }} <span style="color: #f44336;">DELETED</span>
+              {{ else }}              <span class="color-subdue">MED ({{ $med }})</span>
+              {{ end }}
+            </p>
+          </div>
+        </li>
+      {{ end }}
+      </ul>
+    {{ else }}
+      <p class="color-subdue">No recent requests found.</p>
+    {{ end }}

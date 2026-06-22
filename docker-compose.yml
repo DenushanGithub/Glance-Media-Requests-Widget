@@ -1,0 +1,16 @@
+services:
+  seerr-api:
+    build: .  
+    image: glance-seerr-api:latest
+    init: true
+    container_name: glance-seerr-request-feed
+    environment:
+      - TZ=America/Toronto
+      - SEERR_URL=${SEERR_URL}
+      - SEERR_API_KEY=${SEERR_API_KEY}
+      - WEBHOOK_AUTH_HEADER=${WEBHOOK_AUTH_HEADER}
+      - REQUESTS_AUTH_TOKEN=${REQUESTS_AUTH_TOKEN}
+      - GOMEMLIMIT=4MiB
+    ports:
+      - 5005:5000
+    restart: unless-stopped
