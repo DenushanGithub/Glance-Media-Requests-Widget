@@ -1,10 +1,10 @@
 - type: custom-api
   title: Media Requests
-  # update-interval: 5s  # Dynacat only — remove this line if using standard Glance
-  frameless: true
   title-url: http://<YOUR_SERVER_IP>:5055/requests
   url: http://<YOUR_SERVER_IP>:5005/requests
-  cache: 5m
+  # update-interval: 30s  # Dynacat only — remove this line if using standard Glance
+  cache: 15s
+  frameless: true
   headers:
     Authorization: "Bearer <REQUESTS_AUTH_TOKEN>"
   template: |
@@ -12,19 +12,19 @@
     {{ if gt (len $request_list) 0 }}
       <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;">
       {{ range $request_list }}
-        <li class="flex items-center gap-10 thumbnail-container thumbnail-parent">
-          <a href="http://<YOUR_SEERR_IP>:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
+        <li class="flex items-center gap-10 thumbnail-container thumbnail-parent" style="background: var(--card-bg); border-radius: var(--border-radius, 8px);">
+          <a href="http://<YOUR_SERVER_IP>:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
             {{ $poster := .String "poster" }}
             {{ if ne $poster "" }}
-              <img src="https://image.tmdb.org/t/p/w300{{ $poster }}" style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #222;" class="card">
+              <img src="https://image.tmdb.org/t/p/w300{{ $poster }}" style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: color-mix(in srgb, var(--color-text-base) 8%, var(--background-color));" class="card-seerr-requests">
             {{ else }}
-              <div style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #333; display: flex; align-items: center; justify-content: center;" class="card">
-                <span class="color-subdue">No Poster</span>
+              <div class="card flex items-center justify-center text-center" style="border-radius: var(--border-radius, 5px); min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: color-mix(in srgb, currentColor 3%, transparent); padding: 8px;">
+                <p class="size-h5 color-subdue"><b>POSTER MISSING</b></p>
               </div>
             {{ end }}
           </a>
           <div class="flex-1" style="padding-right: 5px;">
-            <p class="color-positive size-h4 text-truncate-2-lines margin-top-2">
+            <p class="color-primary size-h4 text-truncate-2-lines margin-top-2">
               <strong style="text-transform: capitalize;">{{ .String "title" }}</strong>
               <span class="color-subdue">({{ or (.String "year") "UNKNOWN" }})</span>
             </p>
