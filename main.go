@@ -26,7 +26,7 @@ const (
 )
 
 var (
-	SeerrURL          = getEnv("SEERR_URL")
+	SeerrURL 		  = getEnv("SEERR_URL", "")
 	APIKey            = os.Getenv("SEERR_API_KEY")
 	WebhookAuthHeader = os.Getenv("WEBHOOK_AUTH_HEADER")
 	RequestsAuthToken = os.Getenv("REQUESTS_AUTH_TOKEN")
