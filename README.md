@@ -148,43 +148,48 @@ Add this to your Glance config, replacing the placeholders with your actual host
   template: |
     {{ $request_list := .JSON.Array "results" }}
     {{ if gt (len $request_list) 0 }}
-      <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;">
+      <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 0 10px 0 0;">
       {{ range $request_list }}
-        <li class="flex items-center gap-10 thumbnail-container thumbnail-parent">
+        <li class="flex items-center gap-10 thumbnail-container thumbnail-parent" style="background: color-mix(in srgb, currentColor 3%, transparent); border: 1px solid color-mix(in srgb, currentColor 6%, transparent); border-radius: 4px; transition: transform 0.2s ease;">
           <a href="http://<YOUR_SERVER_IP>:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
             {{ $poster := .String "poster" }}
             {{ if ne $poster "" }}
-              <img src="https://image.tmdb.org/t/p/w300{{ $poster }}" style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #222;" class="card">
+              <!-- Changed border-radius to 4px to round the right side as well -->
+              <img src="https://image.tmdb.org/t/p/w300{{ $poster }}" style="border-radius: 4px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: color-mix(in srgb, var(--color-text-base) 8%, var(--background-color));" class="card-seerr-requests" loading="lazy">
             {{ else }}
-              <div style="border-radius: 5px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: #333; display: flex; align-items: center; justify-content: center;" class="card">
-                <span class="color-subdue">No Poster</span>
+              <!-- Changed border-radius to 4px here too for the fallback missing poster -->
+              <div class="card flex items-center justify-center text-center" style="border-radius: 4px; min-width: 6rem; max-width: 6rem; aspect-ratio: 2/3; background: color-mix(in srgb, currentColor 10%, transparent); padding: 8px;">
+                <p class="size-h5 color-subdue"><b>POSTER MISSING</b></p>
               </div>
             {{ end }}
           </a>
           <div class="flex-1" style="padding-right: 5px;">
-            <p class="color-positive size-h4 text-truncate-2-lines margin-top-2">
-              <strong style="text-transform: capitalize;">{{ .String "title" }}</strong>
+            <p class="size-h5 text-truncate-2-lines margin-top-2">
+              <!-- Title: Strong and highlighted -->
+              <strong class="color-highlight" style="text-transform: capitalize;">{{ .String "title" }}</strong>
+              <!-- Year: Muted subdue color -->
               <span class="color-subdue">({{ or (.String "year") "UNKNOWN" }})</span>
             </p>
-            <p class="size-h5">By: <b>{{ .String "requestedBy" }}</b></p>
+            <!-- Requested By: Set to color-paragraph for a clean mid-tone text look -->
+            <p class="size-h5 color-text-subdue">By: <b>{{ .String "requestedBy" }}</b></p>
             <p class="size-h5">
               {{ $req := .Int "requestStatus" }}
-              {{ if eq $req 1 }}      <span style="color: #ffc107;">PENDING</span>
-              {{ else if eq $req 2 }} <span style="color: #4caf50;">APPROVED</span>
-              {{ else if eq $req 3 }} <span style="color: #f44336;">DECLINED</span>
-              {{ else if eq $req 4 }} <span style="color: #f44336;">FAILED</span>
-              {{ else if eq $req 5 }} <span style="color: #4caf50;">APPROVED</span> 
+              {{ if eq $req 1 }}      <span style="font-weight: 700; color: #ffc107;">PENDING</span>
+              {{ else if eq $req 2 }} <span style="font-weight: 700; color: #4caf50;">APPROVED</span>
+              {{ else if eq $req 3 }} <span style="font-weight: 700; color: #f44336;">DECLINED</span>
+              {{ else if eq $req 4 }} <span style="font-weight: 700; color: #f44336;">FAILED</span>
+              {{ else if eq $req 5 }} <span style="font-weight: 700; color: #4caf50;">APPROVED</span> 
               {{ else }}              <span class="color-subdue">REQ ({{ $req }})</span>
               {{ end }}
-              |
+              <span class="color-subdue">|</span>
               {{ $med := .Int "mediaStatus" }}
               {{ if eq $med 1 }}      <span class="color-subdue">UNKNOWN</span>
-              {{ else if eq $med 2 }} <span style="color: #2196f3;">PENDING</span>
-              {{ else if eq $med 3 }} <span style="color: #ffc107;">PROCESSING</span>
-              {{ else if eq $med 4 }} <span style="color: #00bcd4;">PARTIAL</span>
-              {{ else if eq $med 5 }} <span style="color: #4caf50;">AVAILABLE</span>
-              {{ else if eq $med 6 }} <span style="color: #f44336;">BLACKLISTED</span>
-              {{ else if eq $med 7 }} <span style="color: #f44336;">DELETED</span>
+              {{ else if eq $med 2 }} <span style="font-weight: 700; color: #2196f3;">PENDING</span>
+              {{ else if eq $med 3 }} <span style="font-weight: 700; color: #ffc107;">PROCESSING</span>
+              {{ else if eq $med 4 }} <span style="font-weight: 700; color: #00bcd4;">PARTIAL</span>
+              {{ else if eq $med 5 }} <span style="font-weight: 700; color: #4caf50;">AVAILABLE</span>
+              {{ else if eq $med 6 }} <span style="font-weight: 700; color: #f44336;">BLACKLISTED</span>
+              {{ else if eq $med 7 }} <span style="font-weight: 700; color: #f44336;">DELETED</span>
               {{ else }}              <span class="color-subdue">MED ({{ $med }})</span>
               {{ end }}
             </p>

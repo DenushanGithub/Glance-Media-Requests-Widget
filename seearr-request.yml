@@ -13,7 +13,7 @@
       <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 0 10px 0 0;">
       {{ range $request_list }}
         <li class="flex items-center gap-10 thumbnail-container thumbnail-parent" style="background: color-mix(in srgb, currentColor 3%, transparent); border: 1px solid color-mix(in srgb, currentColor 6%, transparent); border-radius: 4px; transition: transform 0.2s ease;">
-          <a href="http://192.168.2.50:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
+          <a href="http://<YOUR_SERVER_IP>:5055/{{ .String "type" }}/{{ .Int "tmdbId" }}" target="_blank">
             {{ $poster := .String "poster" }}
             {{ if ne $poster "" }}
               <!-- Changed border-radius to 4px to round the right side as well -->

@@ -26,7 +26,7 @@ const (
 )
 
 var (
-	SeerrURL          = getEnv("SEERR_URL", "http://192.168.2.50:5055/api/v1")
+	SeerrURL          = getEnv("SEERR_URL")
 	APIKey            = os.Getenv("SEERR_API_KEY")
 	WebhookAuthHeader = os.Getenv("WEBHOOK_AUTH_HEADER")
 	RequestsAuthToken = os.Getenv("REQUESTS_AUTH_TOKEN")
@@ -43,7 +43,7 @@ const banner = `
   GLANCE SEERR API
 `
 
-const version = "v1.0.0"
+const version = "v1.0.1"
 
 // --- TYPES ---
 
