@@ -150,7 +150,7 @@ Add this to your Glance config, replacing the placeholders with your actual host
     {{ $request_list := .JSON.Array "results" }}
     {{ if gt (len $request_list) 0 }}
       {{/* Container list with fixed max height and smooth scrolling */}}
-      <ul class="list list-gap-10" style="max-height: 480px; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 0 10px 0 0;">
+      <ul class="list list-gap-10" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: thin; ">
       {{ range $request_list }}
         {{/* Individual request list item card */}}
         <li class="flex items-center gap-10 thumbnail-container thumbnail-parent" style="background: color-mix(in srgb, currentColor 3%, transparent); border: 1px solid color-mix(in srgb, currentColor 6%, transparent); border-radius: 4px; transition: transform 0.2s ease;">
